@@ -4,6 +4,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.List;
 
 public class HomePagePOM {
     private WebDriver driver;
@@ -97,24 +102,29 @@ public class HomePagePOM {
     private By faqBlock = By.className("Home_FAQ__3uVm4");
 
     // Вопросы
-    private By faqQuestionOne = By.id("accordion__heading-0");
-    private By faqQuestionTwo = By.id("accordion__heading-1");
-    private By faqQuestionThree = By.id("accordion__heading-2");
-    private By faqQuestionFour = By.id("accordion__heading-3");
-    private By faqQuestionFive = By.id("accordion__heading-4");
-    private By faqQuestionSix = By.id("accordion__heading-5");
-    private By faqQuestionSeven = By.id("accordion__heading-6");
-    private By faqQuestionEight = By.id("accordion__heading-7");
+    private By[] faqQuestions = {
+            By.id("accordion__heading-0"),
+            By.id("accordion__heading-1"),
+            By.id("accordion__heading-2"),
+            By.id("accordion__heading-3"),
+            By.id("accordion__heading-4"),
+            By.id("accordion__heading-5"),
+            By.id("accordion__heading-6"),
+            By.id("accordion__heading-7")
+    };;
 
     // Ответы
-    private By faqAnswerOne = By.id("accordion__panel-0");
-    private By faqAnswerTwo = By.id("accordion__panel-1");
-    private By faqAnswerThree = By.id("accordion__panel-2");
-    private By faqAnswerFour = By.id("accordion__panel-3");
-    private By faqAnswerFive = By.id("accordion__panel-4");
-    private By faqAnswerSix = By.id("accordion__panel-5");
-    private By faqAnswerSeven = By.id("accordion__panel-6");
-    private By faqAnswerEight = By.id("accordion__panel-7");
+    private By[] faqAnswers = {
+            By.id("accordion__panel-0"),
+            By.id("accordion__panel-1"),
+            By.id("accordion__panel-2"),
+            By.id("accordion__panel-3"),
+            By.id("accordion__panel-4"),
+            By.id("accordion__panel-5"),
+            By.id("accordion__panel-6"),
+            By.id("accordion__panel-7")
+    };
+
 
 
     // ===== МЕТОДЫ =====
@@ -125,11 +135,19 @@ public class HomePagePOM {
     }
 
     // Клик по вопросу FAQ (универсально)
-    public void clickFaqQuestion(int questionNumber) {
-        driver.findElement(By.id("accordion__heading-" + questionNumber)).click();
-    }
+    public String clickFaqQuestionAndGetAnswer(int questionNumber) {
 
-    // Получить текст ответа FAQ (универсально)
+        WebElement question = new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.elementToBeClickable(faqQuestions[questionNumber]));
+        question.click();
+
+
+        WebElement answer = new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOfElementLocated(faqAnswers[questionNumber]));
+
+        return answer.getText().trim();
+    }
+        // Получить текст ответа FAQ (универсально)
     public String getFaqAnswer(int answerNumber) {
         return driver.findElement(By.id("accordion__panel-" + answerNumber)).getText();
     }
@@ -155,10 +173,11 @@ public class HomePagePOM {
     }
 
     // Кнопка закрытия cookie-баннера
-    private By cookieAcceptButton = By.id("rcc-confirm-button");
+        private By cookieAcceptButton = By.id("rcc-confirm-button");
 
     // Метод закрытия cookie-баннера
     public void acceptCookies() {
         driver.findElement(cookieAcceptButton).click();
     }
 }
+

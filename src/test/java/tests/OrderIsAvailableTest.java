@@ -28,15 +28,27 @@ public class OrderIsAvailableTest {
         driver.get("https://qa-scooter.praktikum-services.ru");
         homePagePOM = new HomePagePOM(driver);
         orderPagePOM = new OrderPagePOM(driver);
+        homePagePOM.acceptCookies();
     }
 
     @ParameterizedTest
     @MethodSource("credentialsProvider")
-    public void test(String name, String lastName, String address, String metro, String phone, String date,
-                     String period, String color, String comment, String answer) {
+    public void testOrder(String name, String lastName, String address, String metro,
+                                      String phone, String date, String period, String color,
+                                      String comment, String answer, String buttonLocation) {
+           if (buttonLocation.equals("header")) {
+            homePagePOM.clickOrderButtonHeader();
+        } else {
+            orderPagePOM.clickOrderButtonFooter();
+        }
+            fillOrderForm(name, lastName, address, metro, phone, date, period, color, comment, answer);
 
-        homePagePOM.acceptCookies();
-        homePagePOM.clickOrderButtonHeader();
+    }
+    private void fillOrderForm(String name, String lastName, String address, String metro,
+                               String phone, String date, String period, String color,
+                               String comment, String answer) {
+
+
         orderPagePOM.enterName(name);
         orderPagePOM.enterLastName(lastName);
         orderPagePOM.enterAddress(address);
@@ -54,9 +66,9 @@ public class OrderIsAvailableTest {
     private static Stream<Arguments> credentialsProvider() {
         return Stream.of(
                 Arguments.of("Женя", "Иванов", "ул. Пушкина, д. Колотушкитна", "Сокол",
-                        "+79779940101", "02.10.2025", "сутки", "чёрный жемчуг", "Оставить у двери", "Да"),
+                        "+79779940101", "02.10.2025", "сутки", "чёрный жемчуг", "Оставить у двери", "Да", "header"),
                 Arguments.of("Олег", "Макаров", "ул. Ленина, д. 42", "Охотный Ряд",
-                        "+79779940102", "02.10.2025", "двое суток", "серая безысходность", "Привезти после 12", "Нет")
+                        "+79779940102", "02.10.2025", "двое суток", "серая безысходность", "Привезти после 12", "Нет", "footer")
         );
 }
 

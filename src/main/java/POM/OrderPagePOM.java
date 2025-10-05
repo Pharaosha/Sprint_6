@@ -44,6 +44,9 @@ public class OrderPagePOM {
     private By nextButton = By.xpath("//button[contains(@class,'Button_Button__ra12g') " +
             "and contains(@class,'Button_Middle__1CSJM')]");
 
+    private By orderButtonFooter = By.cssSelector(".Home_FinishButton__1_cWm button"); // новая кнопка
+
+
     // ===== ЛОКАТОРЫ продолжение заказа =====
 
     // Заголовок блока "Про аренду"
@@ -68,6 +71,11 @@ public class OrderPagePOM {
 
 
     // ===== МЕТОДЫ =====
+
+    // Клик по кнопке "Заказать" в футере
+    public void clickOrderButtonFooter() {
+        driver.findElement(orderButtonFooter).click();
+    }
 
     public void enterName(String Name) {
         driver.findElement(firstNameInput).clear();
