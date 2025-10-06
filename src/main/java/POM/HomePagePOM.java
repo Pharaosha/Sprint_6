@@ -1,0 +1,183 @@
+package POM;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.List;
+
+public class HomePagePOM {
+    private WebDriver driver;
+
+    public HomePagePOM(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    // ===== HEADER =====
+    // Логотип Яндекс
+    private By logoYandex = By.cssSelector("a.Header_LogoYandex__3TSOI img");
+
+    // Логотип Scooter
+    private By logoScooter = By.cssSelector("a.Header_LogoScooter__3lsAR img");
+
+    // Дисклеймер "Учебный тренажер"
+    private By headerDisclaimer = By.cssSelector(".Header_Disclaimer__3VEni");
+
+    // Кнопка "Заказать" в шапке
+    private By orderButtonHeader = By.xpath("//button[text()='Заказать']");
+
+    // Кнопка "Статус заказа"
+    private By orderStatusButton = By.xpath("//button[text()='Статус заказа']");
+
+    // Поле ввода "Введите номер заказа"
+    private By orderNumberInput = By.cssSelector("input[placeholder='Введите номер заказа']");
+
+    // Сообщение об ошибке под полем ввода
+    private By inputErrorMessage = By.cssSelector(".Input_ErrorMessage__3HvIb");
+
+    // Кнопка "Go!"
+    private By goButton = By.xpath("//button[text()='Go!']");
+
+
+    // ===== HERO-БЛОК =====
+    // Заголовок "Самокат на пару дней"
+    private By mainHeader = By.xpath("//div[contains(@class,'Home_Header__iJKdX')]");
+
+    // Подзаголовок первый
+    private By subHeaderFirst = By.xpath("//div[contains(text(),'Привезём его прямо к вашей двери')]");
+
+    // Подзаголовок второй
+    private By subHeaderSecond = By.xpath("//div[contains(text(),'Он лёгкий и с мощными колёсами')]");
+
+    // Картинка чертежа самоката
+    private By blueprintImage = By.cssSelector("img[alt='Scooter blueprint']");
+
+    // Картинка самоката
+    private By scooterImage = By.cssSelector("div.Home_Scooter__3YdJy img");
+
+    // Стрелка вниз "Scroll down"
+    private By arrowDown = By.cssSelector("img[alt='Scroll down']");
+
+
+    // ===== ТАБЛИЦА ХАРАКТЕРИСТИК =====
+    // Модель
+    private By scooterModel = By.xpath("//div[contains(text(),'Модель Toxic PRO')]");
+
+    // Максимальная скорость
+    private By maxSpeedRow = By.xpath("//div[contains(text(),'Максимальная скорость')]/following-sibling::div");
+
+    // Пробег без подзарядки
+    private By batteryRow = By.xpath("//div[contains(text(),'Проедет без поздарядки')]/following-sibling::div");
+
+    // Максимальный вес
+    private By weightRow = By.xpath("//div[contains(text(),'Выдерживает вес')]/following-sibling::div");
+
+
+    // ===== КАК ЭТО РАБОТАЕТ =====
+    // Заголовок "Как это работает"
+    private By howItWorksHeader = By.xpath("//div[contains(text(),'Как это работает')]");
+
+    // Этап 1
+    private By stepOne = By.xpath("//div[contains(text(),'Заказываете самокат')]");
+
+    // Этап 2
+    private By stepTwo = By.xpath("//div[contains(text(),'Курьер привозит самокат')]");
+
+    // Этап 3
+    private By stepThree = By.xpath("//div[contains(text(),'Катаетесь')]");
+
+    // Этап 4
+    private By stepFour = By.xpath("//div[contains(text(),'Курьер забирает самокат')]");
+
+    // Кнопка "Заказать" в конце блока
+    private By orderButtonHowItWorks = By.xpath("//button[text()='Заказать' and contains(@class,'Button_UltraBig__UU3Lp')]");
+
+
+    // ===== FAQ =====
+    // Блок с вопросами
+    private By faqBlock = By.className("Home_FAQ__3uVm4");
+
+    // Вопросы
+    private By[] faqQuestions = {
+            By.id("accordion__heading-0"),
+            By.id("accordion__heading-1"),
+            By.id("accordion__heading-2"),
+            By.id("accordion__heading-3"),
+            By.id("accordion__heading-4"),
+            By.id("accordion__heading-5"),
+            By.id("accordion__heading-6"),
+            By.id("accordion__heading-7")
+    };;
+
+    // Ответы
+    private By[] faqAnswers = {
+            By.id("accordion__panel-0"),
+            By.id("accordion__panel-1"),
+            By.id("accordion__panel-2"),
+            By.id("accordion__panel-3"),
+            By.id("accordion__panel-4"),
+            By.id("accordion__panel-5"),
+            By.id("accordion__panel-6"),
+            By.id("accordion__panel-7")
+    };
+
+
+
+    // ===== МЕТОДЫ =====
+    // Прокрутка до блока FAQ
+    public void scrollToFaq() {
+        WebElement element = driver.findElement(faqBlock);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+    }
+
+    // Клик по вопросу FAQ (универсально)
+    public String clickFaqQuestionAndGetAnswer(int questionNumber) {
+
+        WebElement question = new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.elementToBeClickable(faqQuestions[questionNumber]));
+        question.click();
+
+
+        WebElement answer = new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOfElementLocated(faqAnswers[questionNumber]));
+
+        return answer.getText().trim();
+    }
+        // Получить текст ответа FAQ (универсально)
+    public String getFaqAnswer(int answerNumber) {
+        return driver.findElement(By.id("accordion__panel-" + answerNumber)).getText();
+    }
+
+    // Клик по кнопке "Заказать" в шапке
+    public void clickOrderButtonHeader() {
+        driver.findElement(orderButtonHeader).click();
+    }
+
+    // Клик по кнопке "Статус заказа"
+    public void clickOrderStatusButton() {
+        driver.findElement(orderStatusButton).click();
+    }
+
+    // Ввод номера заказа
+    public void setOrderNumber(String orderNumber) {
+        driver.findElement(orderNumberInput).sendKeys(orderNumber);
+    }
+
+    // Клик по кнопке "Go!"
+    public void clickGoButton() {
+        driver.findElement(goButton).click();
+    }
+
+    // Кнопка закрытия cookie-баннера
+        private By cookieAcceptButton = By.id("rcc-confirm-button");
+
+    // Метод закрытия cookie-баннера
+    public void acceptCookies() {
+        driver.findElement(cookieAcceptButton).click();
+    }
+}
+
